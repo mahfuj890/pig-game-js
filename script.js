@@ -18,9 +18,22 @@ score1El.textContent = 0;
 diceEl.classList.add("hidden");
 let currentScore = 0;
 let activePlayer = 0;
+const scores = [0,0];
+let playing=true
+
+function switchPlayer() {
+  document.querySelector( `#current--${activePlayer}`).textContent = 0;
+  currentScore=0;
+  activePlayer = activePlayer === 0 ? 1 : 0;
+  player0El.classList.toggle("player--active");
+  player1El.classList.toggle("player--active");
+}
 
 //Roling dice funcationlity
 btnRoll.addEventListener("click", () => {
+  if(playing){
+
+
   //Generate Random number
   const diceRandomNumber = Math.trunc(Math.random() * 6) + 1;
 
@@ -35,10 +48,32 @@ btnRoll.addEventListener("click", () => {
   }
   else{
     //Switch Player
-    document.querySelector( `#current--${activePlayer}`).textContent = 0;
-    currentScore=0;
-    activePlayer = activePlayer === 0 ? 1 : 0;
-    player0El.classList.toggle("player--active");
-    player1El.classList.toggle("player--active");
+    switchPlayer()
   }
+}
 });
+
+
+btnHold.addEventListener("click",()=>{
+  if(playing){
+
+
+  //Add active player current score
+  scores[activePlayer] += currentScore;
+  document.querySelector(`#score--${activePlayer}`).textContent=scores[activePlayer];
+  //Check game requirment
+  if(scores[activePlayer] >=10){
+    //Finsh the game
+    playing = false
+    diceEl.classList.add("hidden");
+    document.querySelector( `.player--${activePlayer}`).classList.add("player--winner");
+    document.querySelector( `.player--${activePlayer}`).classList.remove("player--active");
+  }
+  else{
+ //Switch Player
+ switchPlayer()
+  }
+
+}
+
+})
